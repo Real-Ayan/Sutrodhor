@@ -1,50 +1,97 @@
 # Sutrodhor
 
-> A native writing environment where research becomes structured context for the writing itself.
+**Sutrodhor** is a native, AI-assisted writing and research environment.
 
-Sutrodhor is a Linux-first, AI-assisted writing and research desktop application. The long-term idea is to connect:
+> **A native writing environment where research becomes structured context for the writing itself.**
+
+It connects **ideas, claims, sources, evidence, and drafts** so writers can understand not only what they are writing, but where the ideas and information behind it came from.
+
+> **From sources to story.**
 
 **Ideas → Claims → Sources → Evidence → Outline → Draft → Fact Check → Story**
 
-The document is not the database. The document is one view of the writer's knowledge.
+---
 
-This is an early-stage personal/learning product. The foundation is being built in public; the full product is not here yet.
+## What it does
+
+Sutrodhor aims to bring writing and research into one focused workspace.
+
+* Markdown-first writing environment
+* Research and source collection
+* Ideas and claim tracking
+* Evidence and citation management
+* AI-assisted research and writing
+* Fact-checking and claim verification
+* Research and story graphs
+* Workflows for scripts, essays, and nonfiction
+* Local-first project storage
+* Native desktop application (Linux first)
+
+The goal isn't simply to have AI write for you.
+
+It's to help you **research, understand, organize, verify, and then write**.
 
 ---
 
-## Name
+## Why Sutrodhor?
 
-**Sutrodhor** (সূত্রধর) — from Bangla/Sanskrit roots. A *sutradhar* is traditionally the narrator or thread-holder of a play: the one who holds the *sutra* (thread) of the story. That metaphor fits: you hold research, claims, and evidence as threads, then weave them into writing.
+**সূত্রধর (Sutrodhor)** is a Bengali word traditionally associated with a narrator or storyteller who helps carry and connect a narrative.
 
-Product UI and code comments stay in English. The name origin is the one place non-English belongs on purpose.
+The name also evokes **সূত্র (sutro)** — a thread, connection, or source.
 
----
+That reflects the central idea of the project: connecting the many threads behind a piece of writing.
 
-## Status
-
-**Docs and roadmap only.** No desktop binary or AI server yet.
-
-Next build slice (when we start coding): empty app stubs → FastAPI `GET /health` → Tauri three-pane shell → project/document filesystem workflow.
-
-See [docs/roadmap.md](docs/roadmap.md) for phases and stop lines.
+Product UI and code stay in English. The name origin is the one place non-English belongs on purpose.
 
 ---
 
-## Stack (planned)
+## The idea
+
+AI is already very good at generating text.
+
+Sutrodhor explores a different question:
+
+> **What if the writing environment understood the research behind the writing?**
+
+Instead of treating a document as a blank page, Sutrodhor treats it as a network of ideas, claims, sources, evidence, and stories.
+
+> **The document is not the database. The document is one view of the writer's knowledge.**
+
+---
+
+## Architecture
 
 ```text
-                 Sutrodhor
-                     │
-          ┌──────────┴──────────┐
-          │                     │
-       Rust App              Python AI
-     (Tauri desktop)      (FastAPI sibling)
-          │                     │
-   Project / Documents      LLM / Agents
-   Files / Storage          Research
-   Search / Graph           Fact checking
-   Native shell + UI        Extraction
+┌─────────────────────────────┐
+│        Desktop UI           │
+│       Tauri + React         │
+└──────────────┬──────────────┘
+               │
+        ┌──────▼──────┐
+        │    Rust     │
+        │             │
+        │ Core        │
+        │ Documents   │
+        │ Storage     │
+        │ Graph       │
+        │ Search      │
+        └──────┬──────┘
+               │
+        ┌──────▼──────┐
+        │   Python    │
+        │   FastAPI   │
+        │             │
+        │ AI / Agents │
+        │ Research    │
+        │ Fact Check  │
+        └─────────────┘
 ```
+
+Rust owns the application, documents, project state, storage, search, and graph.
+
+Python provides AI, research, and agent capabilities.
+
+They talk over local HTTP + OpenAPI — not shared memory, not one mega-process.
 
 | Layer | Choice | Owns |
 | --- | --- | --- |
@@ -54,7 +101,19 @@ See [docs/roadmap.md](docs/roadmap.md) for phases and stop lines.
 | AI service | FastAPI + Pydantic + uv | LLM, research agents, extraction, fact check (stubs first) |
 | Target OS | Linux first | `cargo tauri dev` now; AppImage later |
 
-Rust owns the application. Python provides intelligence. They talk over local HTTP + OpenAPI — not shared memory, not one mega-process.
+More detail: [docs/architecture.md](docs/architecture.md).
+
+---
+
+## Project status
+
+**Early development.** Sutrodhor is a learning project and an exploration of what a research-aware, agentic writing environment could look like.
+
+Right now: **docs and roadmap only.** No desktop binary or AI server yet.
+
+Next build slice: empty app stubs → FastAPI `GET /health` → Tauri three-pane shell → project/document filesystem workflow.
+
+See [docs/roadmap.md](docs/roadmap.md) for phases and stop lines.
 
 ---
 
@@ -97,30 +156,24 @@ cd apps/ai-server && uv run uvicorn app.main:app --reload
 cd apps/desktop && npm install && npm run tauri dev
 ```
 
-Until then, read the docs and follow [docs/todo/phase-1-writer.md](docs/todo/phase-1-writer.md).
+Until then, follow [docs/todo/phase-1-writer.md](docs/todo/phase-1-writer.md).
 
 ---
 
-## Documentation map
+## Documentation
 
 | Doc | What it is |
 | --- | --- |
 | [docs/architecture.md](docs/architecture.md) | Why Rust vs Python, filesystem, future SQLite, boundaries |
 | [docs/domain-model.md](docs/domain-model.md) | Idea, Claim, Source, Evidence, Document, Relationship |
 | [docs/roadmap.md](docs/roadmap.md) | Phases 1–5 with stop lines |
-| [docs/todo/](docs/todo/) | Ordered tasks per phase (you-own / co-implement / guide-only) |
-| [docs/monorepo.md](docs/monorepo.md) | Two languages in one repo without pain |
+| [docs/todo/](docs/todo/) | Ordered tasks per phase |
+| [docs/monorepo.md](docs/monorepo.md) | Two languages in one repo |
 | [docs/learning-path.md](docs/learning-path.md) | What to learn before each phase |
-| [docs/working-agreement.md](docs/working-agreement.md) | How guide + co-implement works on this project |
+| [docs/working-agreement.md](docs/working-agreement.md) | How guide + co-implement works |
 
 ---
 
 ## License
 
 TBD. For a public GitHub repo, **MIT** is the simple default when you are ready to add one.
-
----
-
-## Commits
-
-Prefer short conventional prefixes: `docs:`, `chore:`, `feat:`, `fix:`, plus one line of *why*. Use a longer body when the change needs explanation.
